@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    environment:
+      - ENVIRONMENT=dev
+    volumes:
+      - ./backend/app:/var/www
+    networks:
+      - private
+
+  web:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    platform: 'linux/arm64/v8'
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+    networks:
+      - private
+
+  database:
+    image: 'mariadb'
+    ports:
+      - '3306:3306'
+    volumes:
+      - '~/mariadb:/var/lib/mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=Test@123
+    networks:
+      - private
+
+networks:
+  private:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    driver: local
+
