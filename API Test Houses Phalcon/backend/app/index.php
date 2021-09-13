@@ -44,6 +44,7 @@ $app->post('/v1/houses', function() use ($app) {
     $house = new \Models\House();
     $house->name = $data->name;
     $house->rooms = $data->rooms;
+    $house->user = $app->di->get('user')->id;
     $house->create();
 });
 
